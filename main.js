@@ -3,98 +3,123 @@
 // 2: scissors  tijeras
 // en chile se dice "cachipun"
 
-function getComputerChoice() {
-    let choice = Math.floor(Math.random() * 3);
-    switch (choice) {
-        case 0:
-            return "rock";
+// Specifications
+// [x] Create 3 buttons, one for each selection
+// [x] Add event listener that calls your playRound() function
+// [ ] Add a div for displaying the result
+
+const body = document.querySelector("body");
+
+let yourScore = 0;
+let cpuScore = 0;
+let yourStatus = '';
+let cpuStatus = '';
+
+const yourScoreDiv = document.createElement("div");
+yourScoreDiv.textContent = `Your score: ${yourScore} ${yourStatus}`
+yourScoreDiv.setAttribute("id", "yourScore");
+const cpuScoreDiv = document.createElement("div");
+cpuScoreDiv.textContent = `CPU score: ${cpuScore} ${cpuStatus}`
+cpuScoreDiv.setAttribute("id", "cpuScore");
+
+body.appendChild(yourScoreDiv);
+body.appendChild(cpuScoreDiv);
+
+let choice = '';
+
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.id);
+        checkScore(yourScore, cpuScore);
+    });
+});
+
+const playRound = (yourChoice) => {
+    const cpuChoice = () => {
+        let option = Math.floor(Math.random() * (3-1 + 1) + 1);
+        switch (option) {
+            case 1: 
+                return "rock";
+            case 2: 
+                return "paper";
+            case 3:
+                return "scissors";
+        }
+    }
+
+    switch (getWinner(yourChoice, cpuChoice)) {
+        case 0: 
+            yourStatus = "Tie!";
+            cpuStatus = "Tie!";
+            break;
         case 1:
-            return "paper";
-        case 2:
-            return "scissors";
+            yourScore++;
+            yourStatus = "Winner!";
+            cpuStatus = "Loser :(";
+            break;
+        case -1:
+            cpuScore++;
+            cpuStatus = "Winner!";
+            yourStatus = "Loser :(";
+            break;
     }
-}
 
-function getHumanChoice() {
-    while(true) {
-        let input = prompt("Rock, paper, or scissors?");
-        switch (input.toLowerCase()) {
-            case "rock":
-                console.log(input);
-                return input;
-            case "paper":
-                console.log(input);
-                return input;
-            case "scissors":
-                console.log(input);
-                return input;
-            default:
-                continue;
-        }
-    }
-}
-
-function main() {
-    let humanScore = 0;
-    let computerScore = 0;
-
-    let i = 1;
-
-    while (i <= 5) {
-        const humanChoice = getHumanChoice();
-        const computerChoice = getComputerChoice();
-        console.log(`ROUND ${i}!`); 
-        switch (humanChoice) {
-            case "rock":
-                switch (computerChoice) {
-                    case "rock":
-                        console.log("tie (no one wins)");
-                        break;
-                    case "paper":
-                        console.log("paper beats rock (computer wins)");
-                        computerScore++;
-                        break;
-                    case "scissors":
-                        console.log("rock beats scissors (human wins)");
-                        humanScore++;
-                        break;
-                }
-                break;
-            case "paper":
-                switch (computerChoice) {
-                    case "rock":
-                        console.log("paper beats rock (human wins)");
-                        break;
-                    case "paper":
-                        console.log("tie (no one wins)");
-                        computerScore++;
-                        break;
-
-                    case "scissors":
-                        console.log("scissors beats paper (computer wins)");
-                        humanScore++;
-                        break;
-                }
-                break;
-            case "scissors":
-                switch (computerChoice) {
-                    case "rock":
-                        console.log("rock beats scissors (computer wins)");
-                        break;
-                    case "paper":
-                        console.log("scissors beats paper (human wins)");
-                        computerScore++;
-                        break;
-                    case "scissors":
-                        console.log("tie (no one wins)");
-                        humanScore++;
-                        break;
-                }
-                break;
-        }
-        console.log(`HUMAN: ${humanScore}, COMP: ${computerScore}`);
-        i++;
-    }
+    yourScoreDiv.textContent = `Your score: ${yourScore} ${yourStatus}`
+    cpuScoreDiv.textContent = `CPU score: ${cpuScore} ${cpuStatus}`
 }
 
 
+const getWinner = ((yourChoice, cpuChoice) => {
+    switch (yourChoice) {
+        case "rock":
+            switch (cpuChoice()) {
+                case "rock":
+                    return 0;
+                case "paper":
+                    return -1;
+                case "scissors":
+                    return 1;
+            }
+        case "paper":
+            switch (cpuChoice()) {
+                case "rock":
+                    return 1;
+                case "paper":
+                    return 0
+                case "scissors":
+                    return -1;
+            }
+
+        case "scissors":
+            switch (cpuChoice()) {
+                case "rock":
+                    return -1;
+                case "paper":
+                    return 1;
+                case "scissors":
+                    return 0;
+            }
+        default:
+            return;
+    }
+});
+
+
+
+const checkScore = (yourScore, cpuScore) => {
+    if (yourScore === 5) { 
+        buttons.forEach((button) => {
+            button.remove();
+        });
+        const winner = document.createElement("h2");
+        winner.textContent = "Player wins!";
+    }
+    if (cpuScore === 5) {
+        buttons.forEach((button) => {
+            button.remove();
+        });
+        const winner = document.createElement("h2");
+        winner.textContent = "CPU wins!";
+    }
+}
