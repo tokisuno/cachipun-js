@@ -6,7 +6,7 @@
 // Specifications
 // [x] Create 3 buttons, one for each selection
 // [x] Add event listener that calls your playRound() function
-// [ ] Add a div for displaying the result
+// [x] Add a div for displaying the result
 
 const body = document.querySelector("body");
 
@@ -18,6 +18,7 @@ let cpuStatus = '';
 const yourScoreDiv = document.createElement("div");
 yourScoreDiv.textContent = `Your score: ${yourScore} ${yourStatus}`
 yourScoreDiv.setAttribute("id", "yourScore");
+
 const cpuScoreDiv = document.createElement("div");
 cpuScoreDiv.textContent = `CPU score: ${cpuScore} ${cpuStatus}`
 cpuScoreDiv.setAttribute("id", "cpuScore");
@@ -113,7 +114,8 @@ const checkScore = (yourScore, cpuScore) => {
             button.remove();
         });
         const winner = document.createElement("h2");
-        winner.textContent = "Player wins!";
+        winner.textContent = "You win!";
+        body.appendChild(winner);
     }
     if (cpuScore === 5) {
         buttons.forEach((button) => {
@@ -121,5 +123,6 @@ const checkScore = (yourScore, cpuScore) => {
         });
         const winner = document.createElement("h2");
         winner.textContent = "CPU wins!";
+        body.appendChild(winner);
     }
 }
